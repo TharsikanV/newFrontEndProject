@@ -3,7 +3,7 @@ import './RegisterPage.css'
 import { RegisterApi } from '../services/Api';
 import { storeUserData } from '../services/Storage';
 import {isAuthenticated} from '../services/Auth';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate,useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 
 export default function RegisterPage(){
@@ -11,8 +11,12 @@ export default function RegisterPage(){
         email:{required:false},
         password:{required:false},
         name:{required:false},
+        phoneNumber:{required:false},
         custom_error:null
     };
+
+    // added by me
+    const navigate=useNavigate();
 
     const [errors,setErrors]= useState(initialStateErrors);
 
@@ -36,21 +40,27 @@ export default function RegisterPage(){
             errors.password.required=true;
             hasError=true;
         }
+        if(inputs.phoneNumber==""){
+            errors.phoneNumber.required=true;
+            hasError=true;
+        }
 
         if(!hasError){
             setLoading(true)
             //sending register api request
             RegisterApi(inputs).then((response)=>{
                 //store panna
-                storeUserData(response.data.idToken);
+                // storeUserData(response.data.idToken);
+                storeUserData(response.data.data.accessToken);
+                // navigate(`/verify`);
             }).catch((err)=>{
-                if(err.response.data.error.message=="EMAIL_EXISTS"){
-                    setErrors({...errors,custom_error:"Already thus email has been registered!"})
-                }
-                else if(String(err.response.data.error.message).includes('WEAK_PASSWORD'))
-                {
-                    setErrors({...errors,custom_error:"Password should be at least 6 characters!"})
-                }
+                // if(err.response.data.error.message=="EMAIL_EXISTS"){
+                //     setErrors({...errors,custom_error:"Already thus email has been registered!"})
+                // }
+                // else if(String(err.response.data.error.message).includes('WEAK_PASSWORD'))
+                // {
+                //     setErrors({...errors,custom_error:"Password should be at least 6 characters!"})
+                // }
             }).finally(()=>{
                 setLoading(false)
             })
@@ -63,7 +73,8 @@ export default function RegisterPage(){
     const [inputs,setInputs]=useState({
         email:"",
         password:"",
-        name:""
+        name:"",
+        phoneNumber:""
         //ithula naama kodukkira name inputs la kuduthuruppame tag nama athe irukkanum appathaan setInputs function ah use pannika mudiyum
     })//inputs kkaana state
 
@@ -75,7 +86,7 @@ export default function RegisterPage(){
 if (isAuthenticated()){//true/false
      //Redirecting to Dashboard
     //ithukku naama react-router-dom endra package ah install pannanum
-    return <Navigate to="/dashboard" />
+    return <Navigate to="/verify" />
 }
 
 
@@ -117,6 +128,17 @@ if (isAuthenticated()){//true/false
                     errors.password.required==true?
                     (<span className="text-danger" >
                         Password is required.
+                    </span>):null
+                    }
+                 </div>
+                 <div className="form-group">
+                    <label htmlFor="exampleInputPhone1" className="text-uppercase">Phone Number</label>
+      
+                    <input type="text" className="form-control" onChange={handleInput} name="phoneNumber" id="" />
+                    {
+                    errors.phoneNumber.required==true?
+                        (<span className="text-danger" >
+                        Phone Number is required.
                     </span>):null
                     }
                  </div>

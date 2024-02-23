@@ -51,7 +51,16 @@ export default function LoginPage(){
             //sending register api request
             LoginApi(inputs).then((response)=>{
                 //store panna
-                storeUserData(response.data.idToken);
+                let jwtToken=response.data.data.accessToken;
+                if(jwtToken)
+                {
+                    storeUserData(jwtToken);
+                }
+                else{
+                    setErrors({...errors,custom_error:response.data.data})
+                }
+                
+                // navigate(`/`);
             }).catch((err)=>{
                 if (err.code=="ERR_BAD_REQUEST") {
                     setErrors({...errors,custom_error:"Invalid Credentials!"})
@@ -69,7 +78,7 @@ export default function LoginPage(){
     if (isAuthenticated()){//true/false
         //Redirecting to Dashboard
        //ithukku naama react-router-dom endra package ah install pannanum
-       return <Navigate to="/dashboard" />
+       return <Navigate to="/" />
    }
 
     return(

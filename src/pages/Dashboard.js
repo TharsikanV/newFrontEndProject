@@ -3,6 +3,8 @@ import { UserDetailsApi } from "../services/Api"
 import NavBar from "../components/NavBar"
 import { isAuthenticated, logout } from "../services/Auth"
 import { Navigate, useNavigate } from "react-router-dom"
+import { jwtDecode } from "jwt-decode"
+import { getUserData } from "../services/Storage"
 
 export default function DashboardPage(){
    const navigate= useNavigate();//hooks
@@ -11,12 +13,14 @@ export default function DashboardPage(){
     
     useEffect(()=>{
     if (isAuthenticated()){
-     UserDetailsApi().then((response)=>{
-        setUser({name:response.data.users[0].displayName,
-        email:response.data.users[0].email,
-        localId:response.data.users[0].localId
-        })
-     })
+    //  UserDetailsApi().then((response)=>{
+    //     setUser({name:response.data.users[0].displayName,
+    //     email:response.data.users[0].email,
+    //     localId:response.data.users[0].localId
+    //     })
+    //  })
+        let decoded=jwtDecode(getUserData());
+        setUser({ name: decoded.name, email: decoded.emailId, localId: decoded.iss })
     }
     },[])//ore thedava maddum thaan laod akki varanum enda athukku inth empty [] podanum
 
@@ -25,11 +29,11 @@ export default function DashboardPage(){
         navigate('/login')
     }
 
-    if (!isAuthenticated()){//true/false
-        //Redirecting
-       //ithukku naama react-router-dom endra package ah install pannanum
-       return <Navigate to="/login" />
-   }
+//     if (!isAuthenticated()){//true/false
+//         //Redirecting
+//        //ithukku naama react-router-dom endra package ah install pannanum
+//        return <Navigate to="/login" />
+//    }
 
     return(
     <div>
@@ -41,7 +45,7 @@ export default function DashboardPage(){
                 {user.name && user.email && user.localId?
                     (
                         <div>
-                        <p className="text-bold " >Hi {user.name}, your Firebase ID is {user.localId}</p>
+                        <p className="text-bold " >Hi {user.name}, your User ID is {user.localId}</p>
                         <p>Your email is {user.email}</p>
                         </div>
                     ):<p>Loading...</p>
