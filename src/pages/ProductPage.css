@@ -1,0 +1,8 @@
+@media (max-width: 991.98px) {
+    .navbar-left {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+}

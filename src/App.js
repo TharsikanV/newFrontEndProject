@@ -3,6 +3,11 @@ import { BrowserRouter,Route,Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/Dashboard";
 import VerifyPage from "./pages/VerifyPage";
+import Brand from "./pages/Brand";
+import Mobile from "./pages/Mobile";
+import HomePage from "./pages/HomePage";
+import ProductPage from "./pages/ProductPage";
+import ViewProductPage from "./pages/ViewProductPage";
 function App() {
   return (
     <div className="App">
@@ -12,9 +17,16 @@ function App() {
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="/verify" element={<VerifyPage/>}/>
           <Route path="/" element={<DashboardPage/>}/>
+
+          <Route path="/home" element={<HomePage/>}/>
+          <Route path="/products" element={<ProductPage/>}/>
+          <Route path="/products/:mobileId" element={<ViewProductPage/>}/>
+          <Route path="/cart"/>
           {/* <Route path="/dashboard" element={<DashboardPage/>}/> */}
           {/* <Route path="/verify" element={<VerifyPage/>}/> */}
           {/* <Route path="/" element={<h1>Home</h1>}/> */}
+          <Route path="/brand" element={<Brand/>}/>
+          <Route path="/mobile" element={<Mobile/>}/>
         </Routes>
       </BrowserRouter>
       
